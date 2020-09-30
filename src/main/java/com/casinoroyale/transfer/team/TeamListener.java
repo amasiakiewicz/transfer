@@ -3,8 +3,8 @@ package com.casinoroyale.transfer.team;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import com.casinoroyale.team.team.dto.CreateTeamNoticeDto;
 import com.casinoroyale.transfer.team.domain.TeamFacade;
-import com.casinoroyale.transfer.team.dto.CreateTeamDto;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -21,9 +21,9 @@ class TeamListener {
     }
 
     @KafkaListener(topics = "TeamCreated")
-    public void listenCreated(ConsumerRecord<String, CreateTeamDto> kafkaMessage) {
-        final CreateTeamDto createTeamDto = kafkaMessage.value();
-        teamFacade.createTeam(createTeamDto);
+    public void listenCreated(ConsumerRecord<String, CreateTeamNoticeDto> kafkaMessage) {
+        final CreateTeamNoticeDto createTeamNoticeDto = kafkaMessage.value();
+        teamFacade.createTeam(createTeamNoticeDto);
     }
     
     @KafkaListener(topics = "TeamUpdated")

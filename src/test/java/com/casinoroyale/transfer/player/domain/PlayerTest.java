@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import com.casinoroyale.transfer.player.dto.CreatePlayerDto;
+import com.casinoroyale.transfer.player.dto.CreatePlayerNoticeDto;
 import org.junit.jupiter.api.Test;
 
 class PlayerTest {
@@ -30,8 +30,8 @@ class PlayerTest {
         final LocalDate now = LocalDate.now(DEFAULT_ZONE_OFFSET);
         final LocalDate dateOfBirth = now.minusYears(age);
         final LocalDate playStart = now.minusMonths(monthsOfExperience);
-        
-        final CreatePlayerDto createPlayerDto = new CreatePlayerDto(randomUUID(), randomUUID(), dateOfBirth, playStart);
-        return Player.create(createPlayerDto);
+
+        final CreatePlayerNoticeDto createPlayerNoticeDto = new CreatePlayerNoticeDto(randomUUID(), randomUUID(), dateOfBirth, playStart);
+        return Player.create(createPlayerNoticeDto);
     }
 }

@@ -9,10 +9,10 @@ import static lombok.AccessLevel.PACKAGE;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import com.casinoroyale.team.team.dto.CreateTeamNoticeDto;
 import com.casinoroyale.transfer.exchangerate.domain.ExchangeRateFacade;
 import com.casinoroyale.transfer.player.domain.PlayerFacade;
 import com.casinoroyale.transfer.team.dto.CreateChargeFeeDto;
-import com.casinoroyale.transfer.team.dto.CreateTeamDto;
 import lombok.AllArgsConstructor;
 import org.joda.money.Money;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor(access = PACKAGE)
 public class TeamFacade {
 
-    public static final String PLAYER_TEAM_CHANGED_TOPIC = "PlayerTeamChanged";
+    private static final String PLAYER_TEAM_CHANGED_TOPIC = "PlayerTeamChanged";
 
     private final ExchangeRateFacade exchangeRateFacade;
 
@@ -55,10 +55,10 @@ public class TeamFacade {
         kafkaTemplate.send(PLAYER_TEAM_CHANGED_TOPIC, playerId, buyerTeamId);
     }
 
-    public void createTeam(final CreateTeamDto createTeamDto) {
-        checkArgument(createTeamDto != null);
+    public void createTeam(final CreateTeamNoticeDto createTeamNoticeDto) {
+        checkArgument(createTeamNoticeDto != null);
 
-        final Team team = create(createTeamDto);
+        final Team team = create(createTeamNoticeDto);
         teamRepository.save(team);
     }
 

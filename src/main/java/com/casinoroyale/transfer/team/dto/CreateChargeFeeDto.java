@@ -5,22 +5,18 @@ import java.util.UUID;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(makeFinal = false)
-@Setter
-@Getter
 public class CreateChargeFeeDto {
-    
+
     @NotNull(message = "playerId.required")
-    UUID playerId;
+    private UUID playerId;
 
     @NotNull(message = "buyerTeamId.required")
-    UUID buyerTeamId;
+    private UUID buyerTeamId;
 
 }

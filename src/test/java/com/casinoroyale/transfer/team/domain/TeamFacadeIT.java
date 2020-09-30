@@ -15,12 +15,12 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+import com.casinoroyale.team.team.dto.CreateTeamNoticeDto;
 import com.casinoroyale.transfer.exchangerate.domain.ExchangeRateFacade;
 import com.casinoroyale.transfer.exchangerate.dto.UpdateExchangeRateDto;
 import com.casinoroyale.transfer.player.domain.PlayerFacade;
-import com.casinoroyale.transfer.player.dto.CreatePlayerDto;
+import com.casinoroyale.transfer.player.dto.CreatePlayerNoticeDto;
 import com.casinoroyale.transfer.team.dto.CreateChargeFeeDto;
-import com.casinoroyale.transfer.team.dto.CreateTeamDto;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.junit.jupiter.api.Test;
@@ -96,10 +96,10 @@ class TeamFacadeIT {
         final UUID teamId = randomUUID();
         final BigDecimal commissionRate = valueOf(0.05);
         final Money funds = Money.of(USD, 123.45);
-        final CreateTeamDto createTeamDto = new CreateTeamDto(teamId, commissionRate, funds);
+        final CreateTeamNoticeDto createTeamNoticeDto = new CreateTeamNoticeDto(teamId, commissionRate, funds);
 
         //when
-        teamFacade.createTeam(createTeamDto);
+        teamFacade.createTeam(createTeamNoticeDto);
         
         //then
         assertThat(existingTeamInDb(teamId))
@@ -190,8 +190,8 @@ class TeamFacadeIT {
 
     private UUID givenTeamInDb(final Money funds, final BigDecimal teamCommission) {
         final UUID teamId = randomUUID();
-        final CreateTeamDto createTeamDto = new CreateTeamDto(teamId, teamCommission, funds);
-        teamFacade.createTeam(createTeamDto);
+        final CreateTeamNoticeDto createTeamNoticeDto = new CreateTeamNoticeDto(teamId, teamCommission, funds);
+        teamFacade.createTeam(createTeamNoticeDto);
 
         return teamId;
     }
@@ -201,10 +201,10 @@ class TeamFacadeIT {
         final LocalDate now = LocalDate.now(DEFAULT_ZONE_OFFSET);
         final LocalDate dateOfBirth = now.minusYears(age);
         final LocalDate playStart = now.minusMonths(monthOfExperience);
-        
-        final CreatePlayerDto createPlayerDto = new CreatePlayerDto(playerId, teamId, dateOfBirth, playStart);
-        playerFacade.createPlayer(createPlayerDto);
-        
+
+        final CreatePlayerNoticeDto createPlayerNoticeDto = new CreatePlayerNoticeDto(playerId, teamId, dateOfBirth, playStart);
+        playerFacade.createPlayer(createPlayerNoticeDto);
+
         return playerId;
     }
 

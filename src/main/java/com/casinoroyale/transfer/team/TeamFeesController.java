@@ -22,7 +22,7 @@ class TeamFeesController {
     }
 
     @PostMapping
-    void chargeFee(@RequestBody @Valid final CreateChargeFeeDto createChargeFeeDto) {
+    void chargeFee(@Valid @RequestBody final CreateChargeFeeDto createChargeFeeDto) {
         teamFacade.chargeFee(createChargeFeeDto);
     }
 

@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import com.casinoroyale.transfer.player.dto.CreatePlayerDto;
+import com.casinoroyale.transfer.player.dto.CreatePlayerNoticeDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -58,10 +58,10 @@ class PlayerFacadeIT {
         final UUID teamId = randomUUID();
         final LocalDate dateOfBirth = LocalDate.of(2003, 10, 15);
         final LocalDate playStart = LocalDate.of(2012, 3, 1);
-        final CreatePlayerDto createPlayerDto = new CreatePlayerDto(playerId, teamId, dateOfBirth, playStart);
+        final CreatePlayerNoticeDto createPlayerNoticeDto = new CreatePlayerNoticeDto(playerId, teamId, dateOfBirth, playStart);
 
         //when
-        playerFacade.createPlayer(createPlayerDto);
+        playerFacade.createPlayer(createPlayerNoticeDto);
 
         //then
         assertThat(existingPlayerInDb(playerId))
@@ -141,9 +141,9 @@ class PlayerFacadeIT {
         final UUID playerId = randomUUID();
         final LocalDate dateOfBirth = now(DEFAULT_ZONE_OFFSET).minusYears(age);
         final LocalDate playStart = now(DEFAULT_ZONE_OFFSET).minusMonths(monthsOfExperience);
-        final CreatePlayerDto createPlayerDto = new CreatePlayerDto(playerId, teamId, dateOfBirth, playStart);
-        
-        final Player player = Player.create(createPlayerDto);
+        final CreatePlayerNoticeDto createPlayerNoticeDto = new CreatePlayerNoticeDto(playerId, teamId, dateOfBirth, playStart);
+
+        final Player player = Player.create(createPlayerNoticeDto);
         playerRepository.save(player);
 
         return playerId;

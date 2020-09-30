@@ -7,7 +7,7 @@ import static lombok.AccessLevel.PACKAGE;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import com.casinoroyale.transfer.player.dto.CreatePlayerDto;
+import com.casinoroyale.transfer.player.dto.CreatePlayerNoticeDto;
 import lombok.AllArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,10 +31,10 @@ public class PlayerFacade {
         return player.calculateTransferFee();
     }
 
-    public void createPlayer(final CreatePlayerDto createPlayerDto) {
-        checkArgument(createPlayerDto != null);
+    public void createPlayer(final CreatePlayerNoticeDto createPlayerNoticeDto) {
+        checkArgument(createPlayerNoticeDto != null);
 
-        final Player player = Player.create(createPlayerDto);
+        final Player player = Player.create(createPlayerNoticeDto);
         playerRepository.save(player);
     }
 

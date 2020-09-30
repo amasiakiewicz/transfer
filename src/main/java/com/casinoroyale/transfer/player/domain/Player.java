@@ -17,7 +17,7 @@ import javax.persistence.Access;
 import javax.persistence.Entity;
 
 import com.casinoroyale.transfer.infrastructure.BaseEntity;
-import com.casinoroyale.transfer.player.dto.CreatePlayerDto;
+import com.casinoroyale.transfer.player.dto.CreatePlayerNoticeDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,13 +32,13 @@ class Player extends BaseEntity {
     private LocalDate dateOfBirth;
 
     private LocalDate playStart;
-    
-    static Player create(final CreatePlayerDto createPlayerDto) {
+
+    static Player create(final CreatePlayerNoticeDto createPlayerNoticeDto) {
         return new Player(
-                createPlayerDto.getPlayerId(),
-                createPlayerDto.getTeamId(),
-                createPlayerDto.getDateOfBirth(),
-                createPlayerDto.getPlayStart()
+                createPlayerNoticeDto.getPlayerId(),
+                createPlayerNoticeDto.getTeamId(),
+                createPlayerNoticeDto.getDateOfBirth(),
+                createPlayerNoticeDto.getPlayStart()
         );
     }
 

@@ -14,8 +14,8 @@ import javax.persistence.Access;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
+import com.casinoroyale.team.team.dto.CreateTeamNoticeDto;
 import com.casinoroyale.transfer.infrastructure.BaseEntity;
-import com.casinoroyale.transfer.team.dto.CreateTeamDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -37,11 +37,11 @@ class Team extends BaseEntity {
     @Getter(PACKAGE)
     private Money funds;
 
-    static Team create(final CreateTeamDto createTeamDto) {
+    static Team create(final CreateTeamNoticeDto createTeamNoticeDto) {
         return new Team(
-                createTeamDto.getTeamId(),
-                createTeamDto.getCommissionRate(),
-                createTeamDto.getFunds()
+                createTeamNoticeDto.getTeamId(),
+                createTeamNoticeDto.getCommissionRate(),
+                createTeamNoticeDto.getFunds()
         );
     }
 

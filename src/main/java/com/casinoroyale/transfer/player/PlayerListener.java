@@ -3,7 +3,7 @@ package com.casinoroyale.transfer.player;
 import java.util.UUID;
 
 import com.casinoroyale.transfer.player.domain.PlayerFacade;
-import com.casinoroyale.transfer.player.dto.CreatePlayerDto;
+import com.casinoroyale.transfer.player.dto.CreatePlayerNoticeDto;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -20,9 +20,9 @@ class PlayerListener {
     }
 
     @KafkaListener(topics = "PlayerCreated")
-    public void listenCreated(ConsumerRecord<String, CreatePlayerDto> kafkaMessage) {
-        final CreatePlayerDto createPlayerDto = kafkaMessage.value();
-        playerFacade.createPlayer(createPlayerDto);
+    public void listenCreated(ConsumerRecord<String, CreatePlayerNoticeDto> kafkaMessage) {
+        final CreatePlayerNoticeDto createPlayerNoticeDto = kafkaMessage.value();
+        playerFacade.createPlayer(createPlayerNoticeDto);
     }        
     
     @KafkaListener(topics = "PlayerUpdated")

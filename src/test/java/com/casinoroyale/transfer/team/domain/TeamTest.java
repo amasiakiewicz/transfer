@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 import java.util.function.BiFunction;
 
-import com.casinoroyale.transfer.team.dto.CreateTeamDto;
+import com.casinoroyale.team.team.dto.CreateTeamNoticeDto;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.junit.jupiter.api.Test;
@@ -53,7 +53,7 @@ class TeamTest {
         final UUID teamId = UUID.randomUUID();
         final Money funds = Money.of(currency, 123.3);
 
-        final CreateTeamDto createTeamDto = new CreateTeamDto(teamId, commissionRate, funds);
-        return Team.create(createTeamDto);
+        final CreateTeamNoticeDto createTeamNoticeDto = new CreateTeamNoticeDto(teamId, commissionRate, funds);
+        return Team.create(createTeamNoticeDto);
     }
 }

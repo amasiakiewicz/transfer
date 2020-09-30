@@ -9,10 +9,10 @@ import java.util.UUID;
 import lombok.Value;
 
 @Value
-public class CreatePlayerDto {
-    
+public class CreatePlayerNoticeDto {
+
     UUID playerId;
-    
+
     UUID teamId;
 
     LocalDate dateOfBirth;
