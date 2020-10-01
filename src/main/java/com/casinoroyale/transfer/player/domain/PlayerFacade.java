@@ -7,7 +7,7 @@ import static lombok.AccessLevel.PACKAGE;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import com.casinoroyale.transfer.player.dto.CreatePlayerNoticeDto;
+import com.casinoroyale.player.player.dto.CreatePlayerNoticeDto;
 import lombok.AllArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 

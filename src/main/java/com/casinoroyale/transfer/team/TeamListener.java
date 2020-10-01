@@ -6,7 +6,6 @@ import java.util.UUID;
 import com.casinoroyale.team.team.dto.CreateTeamNoticeDto;
 import com.casinoroyale.transfer.team.domain.TeamFacade;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +14,6 @@ class TeamListener {
     
     private final TeamFacade teamFacade;
 
-    @Autowired
     TeamListener(final TeamFacade teamFacade) {
         this.teamFacade = teamFacade;
     }

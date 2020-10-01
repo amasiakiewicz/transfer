@@ -16,8 +16,8 @@ import java.util.UUID;
 import javax.persistence.Access;
 import javax.persistence.Entity;
 
+import com.casinoroyale.player.player.dto.CreatePlayerNoticeDto;
 import com.casinoroyale.transfer.infrastructure.BaseEntity;
-import com.casinoroyale.transfer.player.dto.CreatePlayerNoticeDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

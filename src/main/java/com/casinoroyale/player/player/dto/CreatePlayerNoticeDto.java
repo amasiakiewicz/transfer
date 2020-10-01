@@ -1,14 +1,17 @@
-package com.casinoroyale.transfer.player.dto;
+package com.casinoroyale.player.player.dto;
 
-import static com.casinoroyale.transfer.TransferApplication.DEFAULT_ZONE_OFFSET;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreatePlayerNoticeDto {
 
     UUID playerId;
@@ -32,15 +35,13 @@ public class CreatePlayerNoticeDto {
     }
 
     public LocalDate getDateOfBirth() {
-        final LocalDate now = LocalDate.now(DEFAULT_ZONE_OFFSET);
-        checkArgument(dateOfBirth != null && dateOfBirth.isBefore(now));
+        checkArgument(dateOfBirth != null);
         
         return dateOfBirth;
     }
 
     public LocalDate getPlayStart() {
-        final LocalDate now = LocalDate.now(DEFAULT_ZONE_OFFSET);
-        checkArgument(playStart != null && !playStart.isAfter(now));
+        checkArgument(playStart != null);
 
         return playStart;
     }

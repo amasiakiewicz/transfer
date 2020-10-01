@@ -2,10 +2,9 @@ package com.casinoroyale.transfer.player;
 
 import java.util.UUID;
 
+import com.casinoroyale.player.player.dto.CreatePlayerNoticeDto;
 import com.casinoroyale.transfer.player.domain.PlayerFacade;
-import com.casinoroyale.transfer.player.dto.CreatePlayerNoticeDto;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +13,6 @@ class PlayerListener {
     
     private final PlayerFacade playerFacade;
 
-    @Autowired
     PlayerListener(final PlayerFacade playerFacade) {
         this.playerFacade = playerFacade;
     }
@@ -23,9 +21,9 @@ class PlayerListener {
     public void listenCreated(ConsumerRecord<String, CreatePlayerNoticeDto> kafkaMessage) {
         final CreatePlayerNoticeDto createPlayerNoticeDto = kafkaMessage.value();
         playerFacade.createPlayer(createPlayerNoticeDto);
-    }        
-    
-    @KafkaListener(topics = "PlayerUpdated")
+    }
+
+    @KafkaListener(topics = "PlayerTeamChanged")
     public void listenUpdated(ConsumerRecord<UUID, UUID> kafkaMessage) {
         final UUID playerId = kafkaMessage.key();
         final UUID newTeamId = kafkaMessage.value();

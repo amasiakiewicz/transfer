@@ -15,12 +15,13 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+import com.casinoroyale.player.player.dto.CreatePlayerNoticeDto;
 import com.casinoroyale.team.team.dto.CreateTeamNoticeDto;
 import com.casinoroyale.transfer.exchangerate.domain.ExchangeRateFacade;
 import com.casinoroyale.transfer.exchangerate.dto.UpdateExchangeRateDto;
 import com.casinoroyale.transfer.player.domain.PlayerFacade;
-import com.casinoroyale.transfer.player.dto.CreatePlayerNoticeDto;
 import com.casinoroyale.transfer.team.dto.CreateChargeFeeDto;
+import com.casinoroyale.transfer.team.dto.TeamChargedDto;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.junit.jupiter.api.Test;
@@ -32,13 +33,13 @@ class TeamFacadeIT {
 
     @Autowired //SUT
     private TeamFacade teamFacade;
-    
+
     @Autowired
     private TeamRepository teamRepository;
-    
+
     @Autowired
     private ExchangeRateFacade exchangeRateFacade;
-    
+
     @Autowired
     private PlayerFacade playerFacade;
 
@@ -57,18 +58,24 @@ class TeamFacadeIT {
         final CurrencyUnit pln = CurrencyUnit.of("PLN");
         final Money buyerTeamFunds = Money.of(pln, 300_000);
         final UUID buyerTeamId = givenTeamInDb(buyerTeamFunds);
-        
+
         givenExchangeRateInDb(usd, pln, 3.9228);
-        
+
         final CreateChargeFeeDto createChargeFeeDto = new CreateChargeFeeDto(playerId, buyerTeamId);
+        final Money expectedSellerContractFee = Money.of(usd, 66_875);
+        final Money expectedSellerFunds = Money.of(usd, 266_875);
+        final Money expectedBuyerPaymentAmount = Money.of(pln, 262_337.25);
+        final Money expectedBuyerFunds = Money.of(pln, 37662.75);
 
         //when
-        teamFacade.chargeFee(createChargeFeeDto);
+        final TeamChargedDto teamChargedDto = teamFacade.chargeFee(createChargeFeeDto);
 
         //then
-        assertFundsAfterCharge(sellerTeamId, Money.of(usd, 266875), buyerTeamId, Money.of(pln, 37662.75));
+        assertThat(teamChargedDto)
+                .isEqualTo(expectedTeamChargedDto(expectedSellerContractFee, expectedSellerFunds, expectedBuyerPaymentAmount, expectedBuyerFunds))
+                .satisfies((c) -> fundsAfterCharge(sellerTeamId, expectedSellerFunds, buyerTeamId, expectedBuyerFunds));
     }
-    
+
     @Test
     void shouldNotChargeFeeWhenBuyerTeamIsTheSameAsPlayersTeam() {
         //given
@@ -100,13 +107,13 @@ class TeamFacadeIT {
 
         //when
         teamFacade.createTeam(createTeamNoticeDto);
-        
+
         //then
         assertThat(existingTeamInDb(teamId))
                 .usingRecursiveComparison(builder().withIgnoredFields("version", "createdDateTime").build())
                 .isEqualTo(expectedTeam(teamId, commissionRate, funds));
-    }   
-    
+    }
+
     @Test
     void shouldUpdateTeamOnlyWithCommissionRate() {
         //given
@@ -117,7 +124,7 @@ class TeamFacadeIT {
 
         //when
         teamFacade.updateTeam(teamId, newCommissionRate);
-        
+
         //then
         assertThat(existingTeamInDb(teamId))
                 .usingRecursiveComparison(builder().withIgnoredFields("version", "createdDateTime").build())
@@ -131,7 +138,7 @@ class TeamFacadeIT {
 
         //when
         teamFacade.deleteTeam(teamId);
-        
+
         //then
         assertThat(teamId).satisfies(this::doesntExistInDb);
     }
@@ -157,14 +164,19 @@ class TeamFacadeIT {
                 .orElseThrow(IllegalStateException::new);
     }
 
-    private void assertFundsAfterCharge(
-            final UUID sellerTeamId, final Money expectedSellerFunds, final UUID buyerTeamId, final Money expectedBuyerFunds
+    private TeamChargedDto expectedTeamChargedDto(
+            final Money expectedSellerContractFee, final Money expectedSellerFunds,
+            final Money expectedBuyerPaymentAmount, final Money expectedBuyerFunds
     ) {
+        return new TeamChargedDto(expectedSellerContractFee, expectedSellerFunds, expectedBuyerPaymentAmount, expectedBuyerFunds);
+    }
+
+    private void fundsAfterCharge(final UUID sellerTeamId, final Money expectedSellerFunds, final UUID buyerTeamId, final Money expectedBuyerFunds) {
         final Team sellerTeam = teamRepository
                 .findById(sellerTeamId)
                 .orElseThrow(IllegalStateException::new);
-        assertThat(sellerTeam.getFunds()).isEqualTo(expectedSellerFunds);        
-        
+        assertThat(sellerTeam.getFunds()).isEqualTo(expectedSellerFunds);
+
         final Team buyerTeam = teamRepository
                 .findById(buyerTeamId)
                 .orElseThrow(IllegalStateException::new);
@@ -174,8 +186,8 @@ class TeamFacadeIT {
     private void givenExchangeRateInDb(final CurrencyUnit fromCurrency, final CurrencyUnit toCurrency, final double rate) {
         final OffsetDateTime now = now(DEFAULT_ZONE_OFFSET);
         final UpdateExchangeRateDto updateFromExchangeRateDto = new UpdateExchangeRateDto(valueOf(1.0), now);
-        exchangeRateFacade.createOrUpdateExchangeRate(fromCurrency, updateFromExchangeRateDto);      
-        
+        exchangeRateFacade.createOrUpdateExchangeRate(fromCurrency, updateFromExchangeRateDto);
+
         final UpdateExchangeRateDto updateToExchangeRateDto = new UpdateExchangeRateDto(valueOf(rate), now);
         exchangeRateFacade.createOrUpdateExchangeRate(toCurrency, updateToExchangeRateDto);
     }

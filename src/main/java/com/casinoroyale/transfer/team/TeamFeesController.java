@@ -4,7 +4,7 @@ import javax.validation.Valid;
 
 import com.casinoroyale.transfer.team.domain.TeamFacade;
 import com.casinoroyale.transfer.team.dto.CreateChargeFeeDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.casinoroyale.transfer.team.dto.TeamChargedDto;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,14 +16,13 @@ class TeamFeesController {
     
     private final TeamFacade teamFacade;
 
-    @Autowired
     TeamFeesController(final TeamFacade teamFacade) {
         this.teamFacade = teamFacade;
     }
 
     @PostMapping
-    void chargeFee(@Valid @RequestBody final CreateChargeFeeDto createChargeFeeDto) {
-        teamFacade.chargeFee(createChargeFeeDto);
+    TeamChargedDto chargeFee(@Valid @RequestBody final CreateChargeFeeDto createChargeFeeDto) {
+        return teamFacade.chargeFee(createChargeFeeDto);
     }
 
 }

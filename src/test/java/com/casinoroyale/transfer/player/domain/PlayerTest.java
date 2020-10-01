@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import com.casinoroyale.transfer.player.dto.CreatePlayerNoticeDto;
+import com.casinoroyale.player.player.dto.CreatePlayerNoticeDto;
 import org.junit.jupiter.api.Test;
 
 class PlayerTest {

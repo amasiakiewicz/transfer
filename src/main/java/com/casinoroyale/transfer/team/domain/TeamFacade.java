@@ -13,6 +13,7 @@ import com.casinoroyale.team.team.dto.CreateTeamNoticeDto;
 import com.casinoroyale.transfer.exchangerate.domain.ExchangeRateFacade;
 import com.casinoroyale.transfer.player.domain.PlayerFacade;
 import com.casinoroyale.transfer.team.dto.CreateChargeFeeDto;
+import com.casinoroyale.transfer.team.dto.TeamChargedDto;
 import lombok.AllArgsConstructor;
 import org.joda.money.Money;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -22,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor(access = PACKAGE)
 public class TeamFacade {
 
-    private static final String PLAYER_TEAM_CHANGED_TOPIC = "PlayerTeamChanged";
+    private static final String PLAYER_TRANSFERRED_TOPIC = "PlayerTransferred";
 
     private final ExchangeRateFacade exchangeRateFacade;
 
@@ -32,15 +33,15 @@ public class TeamFacade {
 
     private final TeamRepository teamRepository;
 
-    public void chargeFee(final CreateChargeFeeDto createChargeFeeDto) {
+    public TeamChargedDto chargeFee(final CreateChargeFeeDto createChargeFeeDto) {
         checkArgument(createChargeFeeDto != null);
 
         final UUID playerId = createChargeFeeDto.getPlayerId();
-        
+
         final UUID sellerTeamId = playerFacade.getTeamId(playerId);
         final UUID buyerTeamId = createChargeFeeDto.getBuyerTeamId();
         checkState(!sellerTeamId.equals(buyerTeamId), "Buyer team should be different than players team");
-        
+
         final Team sellerTeam = findTeam(sellerTeamId);
         final Team buyerTeam = findTeam(buyerTeamId);
 
@@ -52,7 +53,11 @@ public class TeamFacade {
         sellerTeam.increaseFunds(sellerContractFee);
         buyerTeam.decreaseFunds(buyerPaymentAmount);
 
-        kafkaTemplate.send(PLAYER_TEAM_CHANGED_TOPIC, playerId, buyerTeamId);
+        kafkaTemplate.send(PLAYER_TRANSFERRED_TOPIC, playerId, buyerTeamId);
+
+        final Money sellerTeamFunds = sellerTeam.getFunds();
+        final Money buyerTeamFunds = buyerTeam.getFunds();
+        return new TeamChargedDto(sellerContractFee, sellerTeamFunds, buyerPaymentAmount, buyerTeamFunds);
     }
 
     public void createTeam(final CreateTeamNoticeDto createTeamNoticeDto) {
