@@ -6,7 +6,7 @@ import static lombok.AccessLevel.PACKAGE;
 
 import java.math.BigDecimal;
 
-import com.casinoroyale.transfer.exchangerate.dto.UpdateExchangeRateDto;
+import com.casinoroyale.exchangerate.exchangerate.dto.UpdateExchangeRateNoticeDto;
 import lombok.AllArgsConstructor;
 import org.joda.money.CurrencyUnit;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,18 +27,18 @@ public class ExchangeRateFacade {
         return toExchangeRate.calculateConversionRate(fromExchangeRate);
     }
 
-    public void createOrUpdateExchangeRate(final CurrencyUnit currency, final UpdateExchangeRateDto updateExchangeRateDto) {
+    public void createOrUpdateExchangeRate(final CurrencyUnit currency, final UpdateExchangeRateNoticeDto updateExchangeRateNoticeDto) {
         checkArgument(currency != null);
-        checkArgument(updateExchangeRateDto != null);
+        checkArgument(updateExchangeRateNoticeDto != null);
 
         final ExchangeRate exchangeRate = exchangeRateRepository
                 .findByCurrency(currency)
                 .orElseGet(() -> {
-                    final ExchangeRate er = ExchangeRate.create(currency, updateExchangeRateDto);
+                    final ExchangeRate er = ExchangeRate.create(currency, updateExchangeRateNoticeDto);
                     return exchangeRateRepository.save(er);
                 });
-        
-        exchangeRate.update(updateExchangeRateDto);
+
+        exchangeRate.update(updateExchangeRateNoticeDto);
     }
 
     private ExchangeRate findExchangeRate(final CurrencyUnit currency) {

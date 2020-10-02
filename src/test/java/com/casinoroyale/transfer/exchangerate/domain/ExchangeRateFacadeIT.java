@@ -9,7 +9,7 @@ import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import com.casinoroyale.transfer.exchangerate.dto.UpdateExchangeRateDto;
+import com.casinoroyale.exchangerate.exchangerate.dto.UpdateExchangeRateNoticeDto;
 import org.joda.money.CurrencyUnit;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,10 +60,10 @@ class ExchangeRateFacadeIT {
             //given
             final CurrencyUnit currency = CurrencyUnit.of("GBP");
             givenCurrencyIsNotInDb(currency);
-            final UpdateExchangeRateDto updateExchangeRateDto = givenUpdateExchangeRateDto();
+            final UpdateExchangeRateNoticeDto updateExchangeRateNoticeDto = givenUpdateExchangeRateDto();
 
             //when
-            exchangeRateFacade.createOrUpdateExchangeRate(currency, updateExchangeRateDto);
+            exchangeRateFacade.createOrUpdateExchangeRate(currency, updateExchangeRateNoticeDto);
 
             //then
             assertThat(currency).satisfies(this::currencyIsInDb);
@@ -75,10 +75,10 @@ class ExchangeRateFacadeIT {
             final CurrencyUnit currency = CurrencyUnit.of("GBP");
             givenExchangeRateInDb(currency, 4.996);
             final BigDecimal rate = valueOf(5.2321);
-            final UpdateExchangeRateDto updateExchangeRateDto = new UpdateExchangeRateDto(rate, now(DEFAULT_ZONE_OFFSET));
+            final UpdateExchangeRateNoticeDto updateExchangeRateNoticeDto = new UpdateExchangeRateNoticeDto(rate, now(DEFAULT_ZONE_OFFSET));
 
             //when
-            exchangeRateFacade.createOrUpdateExchangeRate(currency, updateExchangeRateDto);
+            exchangeRateFacade.createOrUpdateExchangeRate(currency, updateExchangeRateNoticeDto);
 
             //then
             assertThat(currency).satisfies(c -> currencyHasRate(c, rate));
@@ -88,7 +88,7 @@ class ExchangeRateFacadeIT {
         final Optional<BigDecimal> rate = exchangeRateRepository
                 .findByCurrency(currency)
                 .map(ExchangeRate::getRate);
-        
+
         assertThat(rate).hasValue(expectedRate);
     }
 
@@ -97,16 +97,16 @@ class ExchangeRateFacadeIT {
         assertThat(exchangeRate).isNotEmpty();
     }
 
-    private UpdateExchangeRateDto givenUpdateExchangeRateDto() {
-        return new UpdateExchangeRateDto(valueOf(1.0123), now(DEFAULT_ZONE_OFFSET));
+    private UpdateExchangeRateNoticeDto givenUpdateExchangeRateDto() {
+        return new UpdateExchangeRateNoticeDto(valueOf(1.0123), now(DEFAULT_ZONE_OFFSET));
     }
 
     private void givenExchangeRateInDb(final CurrencyUnit currency, final double rate) {
         givenCurrencyIsNotInDb(currency);
-        
-        final UpdateExchangeRateDto rateDto = new UpdateExchangeRateDto(valueOf(rate), now(DEFAULT_ZONE_OFFSET));
+
+        final UpdateExchangeRateNoticeDto rateDto = new UpdateExchangeRateNoticeDto(valueOf(rate), now(DEFAULT_ZONE_OFFSET));
         final ExchangeRate exchangeRate = ExchangeRate.create(currency, rateDto);
-        
+
         exchangeRateRepository.save(exchangeRate);
     }
 

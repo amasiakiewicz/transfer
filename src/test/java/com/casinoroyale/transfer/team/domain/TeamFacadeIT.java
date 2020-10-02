@@ -15,10 +15,10 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+import com.casinoroyale.exchangerate.exchangerate.dto.UpdateExchangeRateNoticeDto;
 import com.casinoroyale.player.player.dto.CreatePlayerNoticeDto;
 import com.casinoroyale.team.team.dto.CreateTeamNoticeDto;
 import com.casinoroyale.transfer.exchangerate.domain.ExchangeRateFacade;
-import com.casinoroyale.transfer.exchangerate.dto.UpdateExchangeRateDto;
 import com.casinoroyale.transfer.player.domain.PlayerFacade;
 import com.casinoroyale.transfer.team.dto.CreateChargeFeeDto;
 import com.casinoroyale.transfer.team.dto.TeamChargedDto;
@@ -185,10 +185,10 @@ class TeamFacadeIT {
 
     private void givenExchangeRateInDb(final CurrencyUnit fromCurrency, final CurrencyUnit toCurrency, final double rate) {
         final OffsetDateTime now = now(DEFAULT_ZONE_OFFSET);
-        final UpdateExchangeRateDto updateFromExchangeRateDto = new UpdateExchangeRateDto(valueOf(1.0), now);
+        final UpdateExchangeRateNoticeDto updateFromExchangeRateDto = new UpdateExchangeRateNoticeDto(valueOf(1.0), now);
         exchangeRateFacade.createOrUpdateExchangeRate(fromCurrency, updateFromExchangeRateDto);
 
-        final UpdateExchangeRateDto updateToExchangeRateDto = new UpdateExchangeRateDto(valueOf(rate), now);
+        final UpdateExchangeRateNoticeDto updateToExchangeRateDto = new UpdateExchangeRateNoticeDto(valueOf(rate), now);
         exchangeRateFacade.createOrUpdateExchangeRate(toCurrency, updateToExchangeRateDto);
     }
 

@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 
-import com.casinoroyale.transfer.exchangerate.dto.UpdateExchangeRateDto;
+import com.casinoroyale.exchangerate.exchangerate.dto.UpdateExchangeRateNoticeDto;
 import org.joda.money.CurrencyUnit;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +26,7 @@ class ExchangeRateTest {
     }
 
     private ExchangeRate givenExchangeRate(final CurrencyUnit currency, final double rate) {
-        final UpdateExchangeRateDto rateDto = new UpdateExchangeRateDto(BigDecimal.valueOf(rate), now(DEFAULT_ZONE_OFFSET));
+        final UpdateExchangeRateNoticeDto rateDto = new UpdateExchangeRateNoticeDto(BigDecimal.valueOf(rate), now(DEFAULT_ZONE_OFFSET));
         return ExchangeRate.create(currency, rateDto);
     }
 }

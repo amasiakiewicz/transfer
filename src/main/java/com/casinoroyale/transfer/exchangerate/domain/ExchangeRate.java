@@ -11,7 +11,7 @@ import java.time.OffsetDateTime;
 import javax.persistence.Access;
 import javax.persistence.Entity;
 
-import com.casinoroyale.transfer.exchangerate.dto.UpdateExchangeRateDto;
+import com.casinoroyale.exchangerate.exchangerate.dto.UpdateExchangeRateNoticeDto;
 import com.casinoroyale.transfer.infrastructure.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,11 +33,11 @@ class ExchangeRate extends BaseEntity {
 
     private OffsetDateTime date;
 
-    public static ExchangeRate create(final CurrencyUnit currency, final UpdateExchangeRateDto updateExchangeRateDto) {
+    public static ExchangeRate create(final CurrencyUnit currency, final UpdateExchangeRateNoticeDto updateExchangeRateNoticeDto) {
         return new ExchangeRate(
                 currency,
-                updateExchangeRateDto.getRate(),
-                updateExchangeRateDto.getDate()
+                updateExchangeRateNoticeDto.getRate(),
+                updateExchangeRateNoticeDto.getDate()
         );
     }
 
@@ -45,12 +45,12 @@ class ExchangeRate extends BaseEntity {
         if (currency.equals(fromExchangeRate.currency)) {
             return BigDecimal.ONE;
         }
-        
+
         return rate.divide(fromExchangeRate.rate, HALF_UP);
     }
 
-    void update(final UpdateExchangeRateDto updateExchangeRateDto) {
-        date = updateExchangeRateDto.getDate();
-        rate = updateExchangeRateDto.getRate();
+    void update(final UpdateExchangeRateNoticeDto updateExchangeRateNoticeDto) {
+        date = updateExchangeRateNoticeDto.getDate();
+        rate = updateExchangeRateNoticeDto.getRate();
     }
 }

@@ -2,6 +2,8 @@ package com.casinoroyale.transfer;
 
 import java.time.ZoneOffset;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +19,16 @@ public class TransferApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(TransferApplication.class, args);
+    }
+
+    @Bean
+    ObjectMapper objectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+
+        final JavaTimeModule javaTimeModule = new JavaTimeModule();
+        mapper.registerModule(javaTimeModule);
+
+        return mapper;
     }
 
     @Bean
