@@ -53,7 +53,7 @@ class Team extends BaseEntity {
 
     void decreaseFunds(final Money fundsToDecrease) {
         funds = funds.minus(fundsToDecrease);
-        checkState(funds.isPositiveOrZero(), "Insufficient funds");
+        checkState(funds.isPositiveOrZero(), "Team has insufficient funds");
     }
 
     void increaseFunds(final Money fundsToIncrease) {
