@@ -31,7 +31,7 @@ class PlayerFacadeIT {
         final UUID playerId = givenPlayerInDb(expectedTeamId);
 
         //when
-        final UUID teamId = playerFacade.getTeamId(playerId);
+        final UUID teamId = playerFacade.findTeamByPlayer(playerId);
 
         //then
         assertThat(teamId).isEqualTo(expectedTeamId);

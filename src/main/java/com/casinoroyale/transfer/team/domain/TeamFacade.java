@@ -39,7 +39,7 @@ public class TeamFacade {
 
         final UUID playerId = createChargeFeeDto.getPlayerId();
 
-        final UUID sellerTeamId = playerFacade.getTeamId(playerId);
+        final UUID sellerTeamId = playerFacade.findTeamByPlayer(playerId);
         final UUID buyerTeamId = createChargeFeeDto.getBuyerTeamId();
         checkState(!sellerTeamId.equals(buyerTeamId), "Buyer team should be different than players team");
 
@@ -53,6 +53,7 @@ public class TeamFacade {
 
         sellerTeam.increaseFunds(sellerContractFee);
         buyerTeam.decreaseFunds(buyerPaymentAmount);
+        playerFacade.updatePlayer(playerId, buyerTeamId);
 
         final Money sellerTeamFunds = sellerTeam.getFunds();
         final Money buyerTeamFunds = buyerTeam.getFunds();

@@ -73,7 +73,8 @@ class TeamFacadeIT {
         //then
         assertThat(teamChargedDto)
                 .isEqualTo(expectedTeamChargedDto(expectedSellerContractFee, expectedBuyerPaymentAmount))
-                .satisfies((c) -> fundsAfterCharge(sellerTeamId, expectedSellerFunds, buyerTeamId, expectedBuyerFunds));
+                .satisfies((c) -> fundsAfterCharge(sellerTeamId, expectedSellerFunds, buyerTeamId, expectedBuyerFunds))
+                .satisfies((c) -> playerAfterCharge(playerId, buyerTeamId));
     }
 
     @Test
@@ -178,6 +179,11 @@ class TeamFacadeIT {
                 .findById(buyerTeamId)
                 .orElseThrow(IllegalStateException::new);
         assertThat(buyerTeam.getFunds()).isEqualTo(expectedBuyerFunds);
+    }
+
+    private void playerAfterCharge(final UUID playerId, final UUID buyerTeamId) {
+        final UUID playersTeamId = playerFacade.findTeamByPlayer(playerId);
+        assertThat(playersTeamId).isEqualTo(buyerTeamId);
     }
 
     private void givenExchangeRateInDb(final CurrencyUnit fromCurrency, final CurrencyUnit toCurrency, final double rate) {

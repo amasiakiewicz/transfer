@@ -17,7 +17,7 @@ public class PlayerFacade {
 
     private final PlayerRepository playerRepository;
 
-    public UUID getTeamId(final UUID playerId) {
+    public UUID findTeamByPlayer(final UUID playerId) {
         checkArgument(playerId != null);
 
         final Player player = findPlayer(playerId);

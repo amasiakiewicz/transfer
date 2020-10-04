@@ -23,14 +23,6 @@ class PlayerListener {
         playerFacade.createPlayer(createPlayerNoticeDto);
     }
 
-    @KafkaListener(topics = "PlayerTeamChanged")
-    public void listenUpdated(ConsumerRecord<UUID, UUID> kafkaMessage) {
-        final UUID playerId = kafkaMessage.key();
-        final UUID newTeamId = kafkaMessage.value();
-        
-        playerFacade.updatePlayer(playerId, newTeamId);
-    }    
-    
     @KafkaListener(topics = "PlayerDeleted")
     public void listenDeleted(ConsumerRecord<String, UUID> kafkaMessage) {
         final UUID playerId = kafkaMessage.value();
