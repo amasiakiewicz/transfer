@@ -72,7 +72,7 @@ class TeamFacadeIT {
 
         //then
         assertThat(teamChargedDto)
-                .isEqualTo(expectedTeamChargedDto(expectedSellerContractFee, expectedSellerFunds, expectedBuyerPaymentAmount, expectedBuyerFunds))
+                .isEqualTo(expectedTeamChargedDto(expectedSellerContractFee, expectedBuyerPaymentAmount))
                 .satisfies((c) -> fundsAfterCharge(sellerTeamId, expectedSellerFunds, buyerTeamId, expectedBuyerFunds));
     }
 
@@ -164,11 +164,8 @@ class TeamFacadeIT {
                 .orElseThrow(IllegalStateException::new);
     }
 
-    private TeamChargedDto expectedTeamChargedDto(
-            final Money expectedSellerContractFee, final Money expectedSellerFunds,
-            final Money expectedBuyerPaymentAmount, final Money expectedBuyerFunds
-    ) {
-        return new TeamChargedDto(expectedSellerContractFee, expectedSellerFunds, expectedBuyerPaymentAmount, expectedBuyerFunds);
+    private TeamChargedDto expectedTeamChargedDto(final Money expectedSellerContractFee, final Money expectedBuyerPaymentAmount) {
+        return new TeamChargedDto(expectedSellerContractFee, expectedBuyerPaymentAmount);
     }
 
     private void fundsAfterCharge(final UUID sellerTeamId, final Money expectedSellerFunds, final UUID buyerTeamId, final Money expectedBuyerFunds) {

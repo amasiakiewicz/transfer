@@ -13,6 +13,7 @@ import com.casinoroyale.team.team.dto.CreateTeamNoticeDto;
 import com.casinoroyale.transfer.exchangerate.domain.ExchangeRateFacade;
 import com.casinoroyale.transfer.player.domain.PlayerFacade;
 import com.casinoroyale.transfer.team.dto.CreateChargeFeeDto;
+import com.casinoroyale.transfer.team.dto.FeePlayerTransferredNoticeDto;
 import com.casinoroyale.transfer.team.dto.TeamChargedDto;
 import lombok.AllArgsConstructor;
 import org.joda.money.Money;
@@ -23,13 +24,13 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor(access = PACKAGE)
 public class TeamFacade {
 
-    private static final String PLAYER_TRANSFERRED_TOPIC = "PlayerTransferred";
+    private static final String FEE_AND_PLAYER_TRANSFERRED_TOPIC = "FeeAndPlayerTransferred";
 
     private final ExchangeRateFacade exchangeRateFacade;
 
     private final PlayerFacade playerFacade;
 
-    private final KafkaTemplate<UUID, UUID> kafkaTemplate;
+    private final KafkaTemplate<String, FeePlayerTransferredNoticeDto> kafkaTemplate;
 
     private final TeamRepository teamRepository;
 
@@ -53,11 +54,15 @@ public class TeamFacade {
         sellerTeam.increaseFunds(sellerContractFee);
         buyerTeam.decreaseFunds(buyerPaymentAmount);
 
-        kafkaTemplate.send(PLAYER_TRANSFERRED_TOPIC, playerId, buyerTeamId);
-
         final Money sellerTeamFunds = sellerTeam.getFunds();
         final Money buyerTeamFunds = buyerTeam.getFunds();
-        return new TeamChargedDto(sellerContractFee, sellerTeamFunds, buyerPaymentAmount, buyerTeamFunds);
+        final FeePlayerTransferredNoticeDto feePlayerTransferredNoticeDto = new FeePlayerTransferredNoticeDto(
+                sellerTeamFunds, buyerTeamFunds, sellerTeamId, buyerTeamId, playerId
+        );
+
+        kafkaTemplate.send(FEE_AND_PLAYER_TRANSFERRED_TOPIC, "", feePlayerTransferredNoticeDto);
+
+        return new TeamChargedDto(sellerContractFee, buyerPaymentAmount);
     }
 
     public void createTeam(final CreateTeamNoticeDto createTeamNoticeDto) {

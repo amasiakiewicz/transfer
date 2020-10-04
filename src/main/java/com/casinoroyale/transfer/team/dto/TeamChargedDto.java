@@ -12,12 +12,6 @@ public class TeamChargedDto {
     Money sellerContractFee;
 
     @JsonSerialize(using = MoneySerializer.class)
-    Money sellerFunds;
-
-    @JsonSerialize(using = MoneySerializer.class)
     Money buyerPaymentAmount;
-
-    @JsonSerialize(using = MoneySerializer.class)
-    Money buyerFunds;
 
 }
